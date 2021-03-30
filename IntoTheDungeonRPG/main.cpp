@@ -395,13 +395,48 @@ void Menu_Map(_tagPlayer tPlayer) {
 }
 
 void SetStoreItems(_tagItem *tStoreWeapon, _tagItem *tStoreArmor) {
-	tStoreWeapon[0].strName = "아이언 소드";
+
 	tStoreWeapon[0].strTypeName = "무기";
+	tStoreWeapon[0].strName = "롱 소드";
 	tStoreWeapon[0].eType = IT_WEAPON;
 	tStoreWeapon[0].iMin = 10;
 	tStoreWeapon[0].iMax = 15;
 	tStoreWeapon[0].iPrice = 200;
 
+	tStoreWeapon[1].strTypeName = "무기";
+	tStoreWeapon[1].strName = "바스타드 소드";
+	tStoreWeapon[1].eType = IT_WEAPON;
+	tStoreWeapon[1].iMin = 40;
+	tStoreWeapon[1].iMax = 45;
+	tStoreWeapon[1].iPrice = 1000;
+
+	tStoreWeapon[2].strTypeName = "무기";
+	tStoreWeapon[2].strName = "쯔바이핸더";
+	tStoreWeapon[2].eType = IT_WEAPON;
+	tStoreWeapon[2].iMin = 80;
+	tStoreWeapon[2].iMax = 90;
+	tStoreWeapon[2].iPrice = 4000;
+
+	tStoreArmor[0].strTypeName = "방어구";
+	tStoreArmor[0].strName = "가죽 방어구";
+	tStoreArmor[0].eType = IT_ARMOR;
+	tStoreArmor[0].iMin = 20;
+	tStoreArmor[0].iMax = 30;
+	tStoreArmor[0].iPrice = 500;
+
+	tStoreArmor[1].strTypeName = "방어구";
+	tStoreArmor[1].strName = "강철 방어구";
+	tStoreArmor[1].eType = IT_ARMOR;
+	tStoreArmor[1].iMin = 50;
+	tStoreArmor[1].iMax = 60;
+	tStoreArmor[1].iPrice = 2000;
+
+	tStoreArmor[2].strTypeName = "방어구";
+	tStoreArmor[2].strName = "드래곤 뼈 방어구";
+	tStoreArmor[2].eType = IT_ARMOR;
+	tStoreArmor[2].iMin = 100;
+	tStoreArmor[2].iMax = 150;
+	tStoreArmor[2].iPrice = 5000;
 }
 
 

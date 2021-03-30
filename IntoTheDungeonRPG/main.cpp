@@ -90,6 +90,51 @@ enum JOB
 	JOB_END
 };
 
+enum BATTLE
+{
+	BATTLE_NONE = 0,
+	BATTLE_FIGHT,
+	BATTLE_RUN
+};
+
+enum ITEM_TYPE {
+	IT_NONE = 0,
+	IT_WEAPON,
+	IT_ARMOR,
+	IT_BACK,
+};
+
+struct _tagItem {
+
+	string strName;
+	string strTypeName;
+
+	ITEM_TYPE eType;
+	int iMin;
+	int iMax;
+	int iPrice;
+	int iSell;
+
+	string Description;
+};
+
+#define MAX_INVENTORY 20
+#define STORE_ARMOR_MAX 3
+#define STORE_WEAPON_MAX 3
+
+struct _tagInvcentory
+{
+	_tagItem tItems[MAX_INVENTORY];
+	int iGold;
+	int iItemCount;
+};
+
+enum STORE_MENU {
+	SM_NONE = 0,
+	SM_WEAPON,
+	SM_ARMOR,
+	SM_BACK,
+};
 
 struct _tagPlayer
 {
@@ -110,6 +155,8 @@ struct _tagPlayer
 
 	int iExp;
 	int iLevel;
+
+	_tagInvcentory iInventory;
 };
 
 struct _tagMonster
@@ -146,6 +193,7 @@ void Show_Status(_tagPlayer tPlayer) {
 		cout << "공격력 :" << "[" << tPlayer.iAttackMin << "-" << tPlayer.iAttackMax << "]" << endl;
 		cout << "방어력 :" << "[" << tPlayer.iArmorMin << "-" << tPlayer.iArmorMax << "]" << endl;
 		cout << "EXP :" << "[" << tPlayer.iExp << "]" << endl;
+		cout << "Gold : " << tPlayer.iInventory.iGold << "G" << endl;
 		cout << "0. 뒤로가기" << endl;
 		cout << "번호를 입력해주세요 : ";
 		cin >> iMenu;
@@ -185,9 +233,9 @@ void EnemyMaker(_tagMonster* Monsters) {
 	Monsters[1].iArmorMin = 60;
 	Monsters[1].iArmorMax = 90;
 	Monsters[1].iHPMax = 2000;
-	Monsters[1].iHP = Monsters[0].iHPMax;
+	Monsters[1].iHP = Monsters[1].iHPMax;
 	Monsters[1].iMPMax = 100;
-	Monsters[1].iMP = Monsters[0].iMPMax;
+	Monsters[1].iMP = Monsters[1].iMPMax;
 	Monsters[1].iExp = 7000;
 	Monsters[1].iGoldMin = 6000;
 	Monsters[1].iGoldMax = 8000;
@@ -200,13 +248,199 @@ void EnemyMaker(_tagMonster* Monsters) {
 	Monsters[2].iArmorMin = 200;
 	Monsters[2].iArmorMax = 400;
 	Monsters[2].iHPMax = 30000;
-	Monsters[2].iHP = Monsters[0].iHPMax;
+	Monsters[2].iHP = Monsters[2].iHPMax;
 	Monsters[2].iMPMax = 2000;
-	Monsters[2].iMP = Monsters[0].iMPMax;
+	Monsters[2].iMP = Monsters[2].iMPMax;
 	Monsters[2].iExp = 30000;
 	Monsters[2].iGoldMin = 20000;
 	Monsters[2].iGoldMax = 50000;
 	Monsters[2].iLevel = 10;
+}
+
+void Menu_Map(_tagPlayer tPlayer) {
+	_tagMonster Monsters[MT_BACK - 1];
+	EnemyMaker(Monsters);
+
+	int iMenu;
+
+	while (1) {
+		system("cls");
+		Logo();
+		cout << "************************맵**************************" << endl;
+		cout << "1. 쉬움" << endl;
+		cout << "2. 보통" << endl;
+		cout << "3. 어려움" << endl;
+		cout << "4. 뒤로가기" << endl;
+		cout << "맵을 선택하세요 : ";
+		cin >> iMenu;
+
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(1024, '\n');
+			continue;
+		}
+
+		if (iMenu == MT_BACK) {
+			break;
+		}
+
+		_tagMonster tEnemy = Monsters[iMenu - 1];
+
+		while (1)
+		{
+			system("cls");
+			switch (iMenu) {
+			case MT_EASY:
+				cout << "***********************쉬움***************************" << endl;
+				break;
+			case MT_NORMAL:
+				cout << "***********************보통***************************" << endl;
+				break;
+			case MT_HARD:
+				cout << "***********************어려움***************************" << endl;
+				break;
+			}
+			cout << endl;
+			/*플레이어의 Stat*/
+			cout << "====================== Player ======================" << endl;
+			cout << "이름 : " << tPlayer.strName << "\t" << "직업 : " << tPlayer.JobName << endl;
+			cout << "레벨 : " << tPlayer.iLevel << "\t" << "경험치 : " << tPlayer.iExp << endl;
+			cout << "공격력 : " << tPlayer.iAttackMin << "-" << tPlayer.iAttackMax << "\t" << "방어력 : " << tPlayer.iArmorMin << "-" << tPlayer.iArmorMax << endl;
+			cout << "체력 : " << tPlayer.iHP << "/" << tPlayer.iHPMax << "\t" << "마나 : " << tPlayer.iMP << "/" << tPlayer.iMPMax << endl;
+			cout << "보유골드 : " << tPlayer.iInventory.iGold << "G" << endl;
+
+			cout << endl;
+
+			cout << "====================== Monster ======================" << endl;
+			cout << "이름 : " << tEnemy.strName << "\t" << "레벨 : " << tEnemy.iLevel << endl;
+			cout << "공격력 : " << tEnemy.iAttackMin << "-" << tEnemy.iAttackMax << "\t" << "방어력 : " << tEnemy.iArmorMin << "-" << tEnemy.iArmorMax << endl;
+			cout << "체력 : " << tEnemy.iHP << "/" << tEnemy.iHPMax << "\t" << "마나 : " << tEnemy.iMP << "/" << tEnemy.iMPMax << endl;
+			cout << "획득 경험치 : " << tEnemy.iExp << "\t" << "획득 골드 : " << tEnemy.iGoldMin << "-" << tEnemy.iGoldMax << endl;
+
+
+			cout << "1. 공격" << endl;
+			cout << "2. 도망가기" << endl;
+			cout << "메뉴를 선택하세요 : ";
+			cin >> iMenu;
+
+			if (cin.fail()) {
+				cin.clear();
+				cin.ignore(1024, '\n');
+				continue;
+			}
+			else if (iMenu == BATTLE_RUN) {
+				break;
+			}
+
+			switch (iMenu)
+			{
+			case BATTLE_FIGHT:
+				int iAttack = Random_Value(tPlayer.iAttackMin, tPlayer.iAttackMax);
+				int iArmor = Random_Value(tEnemy.iArmorMin, tEnemy.iArmorMax);
+
+				int iDamage = iAttack - iArmor < 1 ? 1 : iAttack - iArmor;
+
+				//데미지 적용
+				tEnemy.iHP -= iDamage;
+				cout << tPlayer.strName << "가(이)" << tEnemy.strName << "에게" << iDamage << "의 피해를 입혔습니다" << endl;
+				if (tEnemy.iHP <= 0) {
+					cout << tEnemy.strName << " 사망" << endl;
+
+					tPlayer.iExp += tEnemy.iExp;
+					int iGold = Random_Value(tEnemy.iGoldMin, tEnemy.iGoldMax);
+					tPlayer.iInventory.iGold += iGold;
+
+					cout << tEnemy.iExp << "만큼 경험치를 획득했습니다!" << endl;
+					cout << iGold << "만큼 골드를 획득했습니다!" << endl;
+					system("pause");
+
+					tEnemy.iHP = tEnemy.iHPMax;
+					tEnemy.iMP = tEnemy.iMPMax;
+
+					break;
+				}
+
+				//몬스터가 죽지 않을 경우 공격
+				iAttack = Random_Value(tEnemy.iAttackMin, tEnemy.iAttackMax);
+				iArmor = Random_Value(tPlayer.iArmorMin, tPlayer.iArmorMax);
+
+				iDamage = iAttack - iArmor < 1 ? 1 : iAttack - iArmor;
+
+				//데미지 적용
+				tPlayer.iHP -= iDamage;
+				cout << tEnemy.strName << "가(이)" << tPlayer.strName << "에게" << iDamage << "의 피해를 입혔습니다" << endl;
+				if (tPlayer.iHP <= 0) {
+					cout << tPlayer.strName << "가 사망하였습니다." << endl;
+
+					int lGold = tPlayer.iInventory.iGold * 0.1f;
+					int lExp = tPlayer.iExp * 0.1f;
+
+					tPlayer.iInventory.iGold -= lGold;
+					tPlayer.iExp -= lExp;
+
+					cout << lExp << "만큼 경험치를 잃었습니다!" << endl;
+					cout << lGold << "만큼 골드를 잃었습니다!" << endl;
+
+					tPlayer.iHP = tPlayer.iHPMax;
+					tPlayer.iMP = tPlayer.iMPMax;
+				}
+				system("pause");
+				break;
+			}
+
+
+		}
+	}
+
+}
+
+void SetStoreItems(_tagItem *tStoreWeapon, _tagItem *tStoreArmor) {
+	tStoreWeapon[0].strName = "아이언 소드";
+	tStoreWeapon[0].strTypeName = "무기";
+	tStoreWeapon[0].eType = IT_WEAPON;
+	tStoreWeapon[0].iMin = 10;
+	tStoreWeapon[0].iMax = 15;
+	tStoreWeapon[0].iPrice = 200;
+
+}
+
+
+void Menu_Store(_tagPlayer tPlayer, _tagItem *tStoreWeapon, _tagItem *tStoreArmor) {
+	int iMenu = 0;
+
+	while (1) {
+		system("cls");
+		Logo();
+		cout << "*****************상점*******************" << endl;
+		cout << "1. 무기 상점" << endl;
+		cout << "2. 방어구 상점" << endl;
+		cout << "3. 뒤로가기" << endl;
+		cout << "상점을 선택하세요 : ";
+		cin >> iMenu;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(1024, '\n');
+			continue;
+		}
+		else if (iMenu == SM_BACK) {
+			break;
+		}
+
+		switch (iMenu) {
+		case SM_WEAPON:
+			while (1) {
+				system("cls");
+				Logo();
+				cout << "****************무기 상점*******************" << endl;
+				//판매 목록을 보여준다
+
+			}
+			break;
+		case SM_ARMOR:
+			break;
+		}
+
+	}
 }
 
 int main() {
@@ -282,6 +516,8 @@ int main() {
 					tPlayer.iLevel = 1;
 					tPlayer.iExp = 0;
 					tPlayer.ejob = (JOB)iJob;
+					tPlayer.iInventory.iGold = 100;
+
 					switch (tPlayer.ejob)
 					{
 					case JOB_KNIGHT:
@@ -342,13 +578,18 @@ int main() {
 					}
 				}
 
-				_tagMonster Monsters[MT_BACK - 1];
-				EnemyMaker(Monsters);
-
 
 				system("cls");
 				Logo();
 
+				/*아이템 설정*/
+				_tagItem tStoreWeapon[STORE_WEAPON_MAX] = {};
+				_tagItem tStoreArmor[STORE_ARMOR_MAX] = {};
+
+				SetStoreItems(tStoreWeapon, tStoreArmor);
+				
+
+				//로비
 				cout << "0. 튜토리얼" << endl;
 				cout << "1. 맵" << endl;
 				cout << "2. 상점" << endl;
@@ -395,29 +636,10 @@ int main() {
 					}
 					break;
 				case MM_MAP:
-					while (1) {
-						system("cls");
-						Logo();
-						cout << "1. 쉬움" << endl;
-						cout << "2. 보통" << endl;
-						cout << "3. 어려움" << endl;
-						cout << "4. 뒤로가기" << endl;
-						cout << "맵을 선택하세요 : ";
-						cin >> iMenu;
-
-						if (cin.fail()) {
-							cin.clear();
-							cin.ignore(1024, '\n');
-							continue;
-						}
-
-						if (iMenu == MT_BACK) {
-							break;
-						}
-					}
-
+					Menu_Map(tPlayer);
 					break;
 				case MM_STORE:
+					Menu_Store(tPlayer, tStoreWeapon, tStoreArmor);
 					break;
 				case MM_INVENTORY:
 					break;

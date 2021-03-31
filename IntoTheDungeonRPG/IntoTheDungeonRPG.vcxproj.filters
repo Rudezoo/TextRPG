@@ -18,8 +18,10 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ascii.cpp">
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="header.h">
       <Filter>소스 파일</Filter>
-    </ClCompile>
+    </ClInclude>
   </ItemGroup>
 </Project>
